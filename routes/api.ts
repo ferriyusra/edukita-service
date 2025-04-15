@@ -1,24 +1,29 @@
 import express, { Request, Response, NextFunction, Router } from 'express';
 
+import { IReqUser } from '../util/interface';
+import { ROLES } from '../util/constant';
+
 import aclMiddleware from '../middleware/acl.middleware';
 import authMiddleware from '../middleware/auth.middleware';
 
-// import { ROLES } from '../util/constant';
-// import { IReqUser } from '../util/interface';
-
+import AssignmentController from '../modules/controller/assignment.controller';
 import AuthController from '../modules/controller/auth.controller';
 import UserController from '../modules/controller/user.controller';
-import { IReqUser } from '../util/interface';
-import { ROLES } from '../util/constant';
 
 export class ApiRouter {
 	private router: Router;
 	private authController: AuthController;
+	private assignmentController: AssignmentController;
 	private userController: UserController;
 
-	constructor(authController: AuthController, userController: UserController) {
+	constructor(
+		authController: AuthController,
+		assignmentController: AssignmentController,
+		userController: UserController
+	) {
 		this.router = express.Router();
 		this.authController = authController;
+		this.assignmentController = assignmentController;
 		this.userController = userController;
 		this.initializeRoutes();
 	}
@@ -57,7 +62,7 @@ export class ApiRouter {
 			/*
 			#swagger.tags = ['Auth']
 			#swagger.security = [{
-			"bearerAuth": [],
+				"bearerAuth": [],
 			}]
 			*/
 		);
@@ -70,10 +75,57 @@ export class ApiRouter {
 				this.userController.create(req, res)
 			/*
 			#swagger.tags = ['User']
+			#swagger.security = [{
+      	"bearerAuth": {}
+      }]
 			#swagger.requestBody = {
 				required: true,
-				schema: {$ref: '#/components/schemas/CreateUserRequest'}
+				schema: {$ref: '#/components/schemas/createUserRequest'}
 			}
+			*/
+		);
+
+		// Assignment Route
+		this.router.post(
+			'/v1/assignments',
+			[authMiddleware, aclMiddleware([ROLES.STUDENT])],
+			(req: IReqUser, res: Response, _next: NextFunction) =>
+				this.assignmentController.create(req, res)
+			/*
+			#swagger.tags = ['Assignment']
+			#swagger.security = [{
+      	"bearerAuth": {}
+      }]
+			#swagger.requestBody = {
+				required: true,
+				schema: {$ref: '#/components/schemas/createAssignmentRequest'}
+			}
+			*/
+		);
+		this.router.get(
+			'/v1/assignments',
+			[authMiddleware, aclMiddleware([ROLES.TEACHER])],
+			(req: IReqUser, res: Response, _next: NextFunction) =>
+				this.assignmentController.findAll(req, res)
+			/*
+			#swagger.tags = ['Assignment']
+			#swagger.parameters['page'] = {
+				in: 'query',
+				type: 'number',
+				default: 1
+			}
+			#swagger.parameters['perPage'] = {
+				in: 'query',
+				type: 'number',
+				default: 10
+			}
+			#swagger.parameters['subject'] = {
+				in: 'query',
+				type: 'string'
+			}
+			#swagger.security = [{
+      	"bearerAuth": {}
+      }]
 			*/
 		);
 	}
@@ -85,7 +137,12 @@ export class ApiRouter {
 
 export default (
 	authController: AuthController,
+	assignmentController: AssignmentController,
 	userController: UserController
 ): Router => {
-	return new ApiRouter(authController, userController).getRouter();
+	return new ApiRouter(
+		authController,
+		assignmentController,
+		userController
+	).getRouter();
 };

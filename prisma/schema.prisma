@@ -19,6 +19,11 @@ enum Role {
   TEACHER
 }
 
+enum AssignmentType {
+  ENGLISH
+  MATH
+}
+
 model users {
   id         Int      @id @default(autoincrement())
   user_id    String   @unique @db.Uuid
@@ -36,18 +41,20 @@ model users {
 }
 
 model assignments {
-  id            Int      @id @default(autoincrement())
-  assignment_id String   @unique @db.Uuid
-  subject       String   @db.Text
-  title         String   @db.Text
-  content       String   @db.Text
-  created_at    DateTime @default(now()) @db.Timestamp()
-  updated_at    DateTime @updatedAt @db.Timestamp()
+  id            Int            @id @default(autoincrement())
+  assignment_id String         @unique @db.Uuid
+  subject       AssignmentType
+  title         String         @db.Text
+  content       String         @db.Text
+  created_at    DateTime       @default(now()) @db.Timestamp()
+  updated_at    DateTime       @updatedAt @db.Timestamp()
 
   student_id String @db.Uuid
   student    users  @relation("student_assignments", fields: [student_id], references: [user_id])
 
   grade grades?
+
+  @@index(fields: [subject])
 }
 
 model grades {

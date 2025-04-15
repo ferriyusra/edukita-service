@@ -8,11 +8,11 @@ const doc = {
 	},
 	servers: [
 		{
-			url: 'http://localhost:9852/api/v1',
+			url: 'http://localhost:9852/api',
 			description: 'Local server',
 		},
 		{
-			url: 'https://back-end-acara-lac.vercel.app/api/v1',
+			url: 'https://edukita-service.app/api',
 			description: 'Development server',
 		},
 	],
@@ -38,6 +38,11 @@ const doc = {
 				fullName: 'yourname',
 				email: 'youremail@mail.com',
 				role: 'roleuser',
+			},
+			createAssignmentRequest: {
+				subject: 'ENGLISH',
+				title: 'title',
+				content: 'content',
 			},
 		},
 	},

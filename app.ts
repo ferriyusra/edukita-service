@@ -22,14 +22,17 @@ import {
 	// Repo
 	createAuthRepository,
 	createUserRepository,
+	createAssignmentRepository,
 
 	// Service
 	createAuthService,
 	createUserService,
+	createAssignmentService,
 
 	// Controller
 	createAuthController,
 	createUserController,
+	createAssignmentController,
 } from './modules';
 
 import apiRouter from './routes/api';
@@ -84,16 +87,22 @@ async function main() {
 	logger.info('Initializing dependencies');
 	const authRepository = createAuthRepository(db);
 	const userRepository = createUserRepository(db);
+	const assignmentRepository = createAssignmentRepository(db);
 
 	const authService = createAuthService(authRepository);
 	const userService = createUserService(userRepository);
+	const assignmentService = createAssignmentService(assignmentRepository);
 
 	const authController = createAuthController(authService);
 	const userController = createUserController(userService);
+	const assignmentController = createAssignmentController(assignmentService);
 
 	// Initialize routes
 	logger.info('Initializing routes');
-	app.use('/api', apiRouter(authController, userController));
+	app.use(
+		'/api',
+		apiRouter(authController, assignmentController, userController)
+	);
 
 	// Initialize API documentation
 	docs(app);

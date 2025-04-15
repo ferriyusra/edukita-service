@@ -7,11 +7,11 @@
   },
   "servers": [
     {
-      "url": "http://localhost:9852/api/v1",
+      "url": "http://localhost:9852/api",
       "description": "Local server"
     },
     {
-      "url": "https://back-end-acara-lac.vercel.app/api/v1",
+      "url": "https://edukita-service.app/api",
       "description": "Development server"
     }
   ],
@@ -101,21 +101,100 @@
             "description": ""
           }
         },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserRequest"
+                "$ref": "#/components/schemas/createUserRequest"
               }
             },
             "application/xml": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserRequest"
+                "$ref": "#/components/schemas/createUserRequest"
               }
             }
           }
         }
+      }
+    },
+    "/v1/assignments": {
+      "post": {
+        "tags": [
+          "Assignment"
+        ],
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createAssignmentRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/createAssignmentRequest"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Assignment"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "default": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "default": 10,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "subject",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ]
       }
     }
   },
@@ -185,6 +264,26 @@
         },
         "xml": {
           "name": "createUserRequest"
+        }
+      },
+      "createAssignmentRequest": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "example": "ENGLISH"
+          },
+          "title": {
+            "type": "string",
+            "example": "title"
+          },
+          "content": {
+            "type": "string",
+            "example": "content"
+          }
+        },
+        "xml": {
+          "name": "createAssignmentRequest"
         }
       }
     }

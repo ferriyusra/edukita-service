@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateGradeDTO } from './types';
+import { GradeDTO, GradeEntity } from './entity';
 
 class GradeRepository {
 	private db: PrismaClient;
@@ -8,7 +10,7 @@ class GradeRepository {
 		this.db = dbClient;
 	}
 
-	async create(data: any) {
+	async create(data: CreateGradeDTO) {
 		const created = await this.db.grades.create({
 			data: {
 				assignment_id: data.assignmentId,
@@ -97,8 +99,8 @@ class GradeRepository {
 	}
 }
 
-function toDto(data: any) {
-	const obj = {
+function toDto(data: GradeEntity): GradeDTO {
+	const obj: GradeDTO = {
 		assignmentId: data.assignment_id,
 		teacherId: data.teacher_id,
 		grade: data.grade,

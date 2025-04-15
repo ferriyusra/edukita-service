@@ -1,9 +1,9 @@
-export interface AssignmentEntity {
+export interface GradeEntity {
 	assignment_id: string;
+	teacher_id: string;
 	student_id: string;
-	subject: string;
-	title: string;
-	content: string;
+	grade: number;
+	feedback: string;
 	created_at: Date;
 	updated_at: Date;
 	student?: {
@@ -11,16 +11,16 @@ export interface AssignmentEntity {
 	};
 }
 
-export interface AssignmentDTO {
+export interface GradeDTO {
 	assignmentId: string;
-	subject: string;
-	title: string;
-	content: string;
+	teacherId: string;
+	grade: number;
+	feedback: string;
 	createdAt: Date;
 	updatedAt: Date;
 	student?: {
 		studentId: string;
 		studentName: string;
 	};
-	studentId?: string;
+	studentId?: string; // hanya muncul jika student tidak tersedia
 }

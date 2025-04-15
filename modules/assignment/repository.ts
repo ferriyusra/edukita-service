@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateAssignmentDTO } from './types';
-import { AssignmentEntity } from './entity';
+import { AssignmentDTO, AssignmentEntity } from './entity';
 
 class AssignmentRepository {
 	private db: PrismaClient;
@@ -103,8 +103,8 @@ class AssignmentRepository {
 	}
 }
 
-function toDto(data: AssignmentEntity) {
-	const obj = {
+function toDto(data: AssignmentEntity): AssignmentDTO {
+	const obj: AssignmentDTO = {
 		assignmentId: data.assignment_id,
 		subject: data.subject,
 		title: data.title,

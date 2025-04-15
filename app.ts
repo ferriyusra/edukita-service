@@ -19,9 +19,17 @@ import logger from './util/logger';
 import { createPrismaClient } from './util/database';
 
 import {
-	createAuthController,
+	// Repo
 	createAuthRepository,
+	createUserRepository,
+
+	// Service
 	createAuthService,
+	createUserService,
+
+	// Controller
+	createAuthController,
+	createUserController,
 } from './modules';
 
 import apiRouter from './routes/api';
@@ -75,14 +83,17 @@ async function main() {
 	// Initialize dependencies
 	logger.info('Initializing dependencies');
 	const authRepository = createAuthRepository(db);
+	const userRepository = createUserRepository(db);
 
 	const authService = createAuthService(authRepository);
+	const userService = createUserService(userRepository);
 
 	const authController = createAuthController(authService);
+	const userController = createUserController(userService);
 
 	// Initialize routes
 	logger.info('Initializing routes');
-	app.use('/api', apiRouter(authController));
+	app.use('/api', apiRouter(authController, userController));
 
 	// Initialize API documentation
 	docs(app);

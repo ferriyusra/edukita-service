@@ -7,14 +7,19 @@ import authMiddleware from '../middleware/auth.middleware';
 // import { IReqUser } from '../util/interface';
 
 import AuthController from '../modules/controller/auth.controller';
+import UserController from '../modules/controller/user.controller';
+import { IReqUser } from '../util/interface';
+import { ROLES } from '../util/constant';
 
 export class ApiRouter {
 	private router: Router;
 	private authController: AuthController;
+	private userController: UserController;
 
-	constructor(authController: AuthController) {
+	constructor(authController: AuthController, userController: UserController) {
 		this.router = express.Router();
 		this.authController = authController;
+		this.userController = userController;
 		this.initializeRoutes();
 	}
 
@@ -49,6 +54,27 @@ export class ApiRouter {
 			authMiddleware,
 			(req: Request, res: Response, _next: NextFunction) =>
 				this.authController.me(req, res)
+			/*
+			#swagger.tags = ['Auth']
+			#swagger.security = [{
+			"bearerAuth": [],
+			}]
+			*/
+		);
+
+		// User Route
+		this.router.post(
+			'/v1/users',
+			[authMiddleware, aclMiddleware([ROLES.ADMIN])],
+			(req: IReqUser, res: Response, _next: NextFunction) =>
+				this.userController.create(req, res)
+			/*
+			#swagger.tags = ['User']
+			#swagger.requestBody = {
+				required: true,
+				schema: {$ref: '#/components/schemas/CreateUserRequest'}
+			}
+			*/
 		);
 	}
 
@@ -57,6 +83,9 @@ export class ApiRouter {
 	}
 }
 
-export default (authController: AuthController): Router => {
-	return new ApiRouter(authController).getRouter();
+export default (
+	authController: AuthController,
+	userController: UserController
+): Router => {
+	return new ApiRouter(authController, userController).getRouter();
 };

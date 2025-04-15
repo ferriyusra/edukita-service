@@ -30,10 +30,14 @@ const doc = {
 			},
 			RegisterRequest: {
 				fullName: 'yourname',
-				username: 'yourusername',
 				email: 'youremail@mail.com',
 				password: 'yourpassword',
 				confirmPassword: 'yourConfirmpassword',
+			},
+			createUserRequest: {
+				fullName: 'yourname',
+				email: 'youremail@mail.com',
+				role: 'roleuser',
 			},
 		},
 	},

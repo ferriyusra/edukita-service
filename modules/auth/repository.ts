@@ -34,7 +34,14 @@ class AuthRepository {
 	async userByIdentifier(identifier: string) {
 		return await this.db.users.findFirst({
 			where: {
-				email: identifier,
+				OR: [
+					{
+						email: identifier,
+					},
+					{
+						full_name: identifier,
+					},
+				],
 			},
 		});
 	}

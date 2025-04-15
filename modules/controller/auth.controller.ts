@@ -82,7 +82,6 @@ function toUserContract(data: any) {
 		id: data.user_id,
 		fullName: data.full_name,
 		email: data.email,
-		birthDate: data.birth_date,
 		role: data.role,
 		createdAt: data.created_at,
 		updatedAt: data.updated_at,

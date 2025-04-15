@@ -46,9 +46,7 @@ export const userDTO = Yup.object({
 export type TypeUser = Yup.InferType<typeof userDTO>;
 
 export interface User extends Omit<TypeUser, 'confirmPassword'> {
-	birthDate?: string;
 	role?: 'TEACHER' | 'STUDENT';
-	avatar?: string;
 	createdAt?: string;
 	updatedAt?: string;
 }

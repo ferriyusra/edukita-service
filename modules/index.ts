@@ -9,6 +9,9 @@ import UserService from './user/service';
 import AssignmentController from './controller/assignment.controller';
 import AuthController from './controller/auth.controller';
 import UserController from './controller/user.controller';
+import GradeController from './controller/grade.controller';
+import GradeRepository from './grade/repository';
+import GradeService from './grade/service';
 
 function createAuthRepository(db: any): AuthRepository {
 	return new AuthRepository(db);
@@ -50,19 +53,37 @@ function createAssignmentController(
 	return new AssignmentController(service);
 }
 
+function createGradeRepository(db: any): GradeRepository {
+	return new GradeRepository(db);
+}
+
+function createGradeService(repository: GradeRepository): GradeService {
+	return new GradeService(repository);
+}
+
+function createGradeController(
+	service: GradeService,
+	assignmentService: AssignmentService
+): GradeController {
+	return new GradeController(service, assignmentService);
+}
+
 export {
 	// Repo
 	createAuthRepository,
 	createUserRepository,
 	createAssignmentRepository,
+	createGradeRepository,
 
 	// Service
 	createUserService,
 	createAuthService,
 	createAssignmentService,
+	createGradeService,
 
 	// Controller
 	createAuthController,
 	createUserController,
 	createAssignmentController,
+	createGradeController,
 };

@@ -23,16 +23,19 @@ import {
 	createAuthRepository,
 	createUserRepository,
 	createAssignmentRepository,
+	createGradeRepository,
 
 	// Service
 	createAuthService,
 	createUserService,
 	createAssignmentService,
+	createGradeService,
 
 	// Controller
 	createAuthController,
 	createUserController,
 	createAssignmentController,
+	createGradeController,
 } from './modules';
 
 import apiRouter from './routes/api';
@@ -88,20 +91,31 @@ async function main() {
 	const authRepository = createAuthRepository(db);
 	const userRepository = createUserRepository(db);
 	const assignmentRepository = createAssignmentRepository(db);
+	const gradeRepository = createGradeRepository(db);
 
 	const authService = createAuthService(authRepository);
 	const userService = createUserService(userRepository);
 	const assignmentService = createAssignmentService(assignmentRepository);
+	const gradeService = createGradeService(gradeRepository);
 
 	const authController = createAuthController(authService);
 	const userController = createUserController(userService);
 	const assignmentController = createAssignmentController(assignmentService);
+	const gradeController = createGradeController(
+		gradeService,
+		assignmentService
+	);
 
 	// Initialize routes
 	logger.info('Initializing routes');
 	app.use(
 		'/api',
-		apiRouter(authController, assignmentController, userController)
+		apiRouter(
+			authController,
+			assignmentController,
+			userController,
+			gradeController
+		)
 	);
 
 	// Initialize API documentation

@@ -9,22 +9,26 @@ import authMiddleware from '../middleware/auth.middleware';
 import AssignmentController from '../modules/controller/assignment.controller';
 import AuthController from '../modules/controller/auth.controller';
 import UserController from '../modules/controller/user.controller';
+import GradeController from '../modules/controller/grade.controller';
 
 export class ApiRouter {
 	private router: Router;
 	private authController: AuthController;
 	private assignmentController: AssignmentController;
 	private userController: UserController;
+	private gradeController: GradeController;
 
 	constructor(
 		authController: AuthController,
 		assignmentController: AssignmentController,
-		userController: UserController
+		userController: UserController,
+		gradeController: GradeController
 	) {
 		this.router = express.Router();
 		this.authController = authController;
 		this.assignmentController = assignmentController;
 		this.userController = userController;
+		this.gradeController = gradeController;
 		this.initializeRoutes();
 	}
 
@@ -128,6 +132,47 @@ export class ApiRouter {
       }]
 			*/
 		);
+
+		// Grade Route
+		this.router.post(
+			'/v1/grades',
+			[authMiddleware, aclMiddleware([ROLES.TEACHER])],
+			(req: IReqUser, res: Response, _next: NextFunction) =>
+				this.gradeController.create(req, res)
+			/*
+			#swagger.tags = ['Grade']
+			#swagger.security = [{
+      	"bearerAuth": {}
+      }]
+			#swagger.requestBody = {
+				required: true,
+				schema: {$ref: '#/components/schemas/createGradeRequest'}
+			}
+			*/
+		);
+
+		this.router.get(
+			'/v1/grades/:studentId',
+			[authMiddleware, aclMiddleware([ROLES.STUDENT, ROLES.TEACHER])],
+			(req: IReqUser, res: Response, _next: NextFunction) =>
+				this.gradeController.findAll(req, res)
+			/*
+			#swagger.tags = ['Grade']
+			#swagger.security = [{
+      	"bearerAuth": {}
+      }]
+				#swagger.parameters['page'] = {
+				in: 'query',
+				type: 'number',
+				default: 1
+			}
+			#swagger.parameters['perPage'] = {
+				in: 'query',
+				type: 'number',
+				default: 10
+			}
+			*/
+		);
 	}
 
 	public getRouter(): Router {
@@ -138,11 +183,13 @@ export class ApiRouter {
 export default (
 	authController: AuthController,
 	assignmentController: AssignmentController,
-	userController: UserController
+	userController: UserController,
+	gradeController: GradeController
 ): Router => {
 	return new ApiRouter(
 		authController,
 		assignmentController,
-		userController
+		userController,
+		gradeController
 	).getRouter();
 };

@@ -6,9 +6,14 @@ class AssignmentService {
 	async create(data: any) {
 		return this.assignmentRepository.create(data);
 	}
+
 	async findAll(paging: any, options: any) {
 		const data = await this.assignmentRepository.findAll(paging, options);
 		return data;
+	}
+
+	async findOne(assignmentId: string) {
+		return this.assignmentRepository.findOne(assignmentId);
 	}
 }
 

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
-class AssignmentRepository {
+class GradeRepository {
 	private db: PrismaClient;
 
 	constructor(dbClient: PrismaClient) {
@@ -9,21 +9,21 @@ class AssignmentRepository {
 	}
 
 	async create(data: any) {
-		const created = await this.db.assignments.create({
+		const created = await this.db.grades.create({
 			data: {
-				assignment_id: uuidv4(),
-				student_id: data.userId,
-				subject: data.subject,
-				title: data.title,
-				content: data.content,
+				assignment_id: data.assignmentId,
+				teacher_id: data.teacherId,
+				student_id: data.studentId,
+				grade: data.grade,
+				feedback: data.feedback,
 				updated_at: new Date(),
 			},
 			select: {
 				assignment_id: true,
+				teacher_id: true,
 				student_id: true,
-				subject: true,
-				title: true,
-				content: true,
+				feedback: true,
+				grade: true,
 				created_at: true,
 				updated_at: true,
 			},
@@ -31,14 +31,14 @@ class AssignmentRepository {
 		return toDto(created);
 	}
 
-	async findAll(paging: any, options: any) {
+	async findAll(paging: any, studentId: string) {
 		const skip = (paging.page - 1) * paging.limit;
 		const filters: any[] = [];
 
-		if (options?.subject) {
+		if (studentId) {
 			filters.push({
-				subject: {
-					equals: options.subject,
+				student_id: {
+					equals: studentId,
 				},
 			});
 		}
@@ -64,7 +64,7 @@ class AssignmentRepository {
 
 		const whereClause = filters.length > 0 ? { AND: filters } : undefined;
 
-		const assignments = await this.db.assignments.findMany({
+		const grades = await this.db.grades.findMany({
 			take: paging.limit,
 			skip: skip,
 			where: whereClause,
@@ -78,40 +78,49 @@ class AssignmentRepository {
 			},
 		});
 
-		const totalItems = await this.db.assignments.count({
+		const totalItems = await this.db.grades.count({
 			where: whereClause,
 		});
 
 		return {
-			rows: assignments.map((assignment) => toDto(assignment)),
+			rows: grades.map((grade) => toDto(grade)),
 			count: totalItems,
 		};
 	}
 
-	async findOne(assignmentId: string) {
-		return this.db.assignments.findFirst({
+	async getGradeByAssignmentId(assignmentId: string) {
+		return this.db.grades.findFirst({
 			where: {
 				assignment_id: assignmentId,
-			},
-			select: {
-				assignment_id: true,
-				student_id: true,
 			},
 		});
 	}
 }
 
 function toDto(data: any) {
-	return {
+	const obj = {
 		assignmentId: data.assignment_id,
-		userId: data.student_id,
-		fullName: data.full_name,
-		subject: data.subject,
-		title: data.title,
-		content: data.content,
+		teacherId: data.teacher_id,
+		grade: data.grade,
+		feedback: data.feedback,
 		createdAt: data.created_at,
 		updatedAt: data.updated_at,
 	};
+
+	if (data.student?.full_name) {
+		return {
+			...obj,
+			student: {
+				studentId: data.student_id,
+				studentName: data.student.full_name,
+			},
+		};
+	}
+
+	return {
+		...obj,
+		studentId: data.student_id,
+	};
 }
 
-export default AssignmentRepository;
+export default GradeRepository;

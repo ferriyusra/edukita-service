@@ -73,6 +73,15 @@ export default {
 			data: null,
 		});
 	},
+	badRequest(res: Response, message: string) {
+		res.status(HttpStatusCode.BadRequest).json({
+			meta: {
+				status: HttpStatusCode.BadRequest,
+				message,
+			},
+			data: null,
+		});
+	},
 	pagination(
 		res: Response,
 		data: any[],

@@ -25,8 +25,6 @@ const validateConfirmPassword = Yup.string()
 	.required()
 	.oneOf([Yup.ref('password'), ''], 'Password not match');
 
-export const USER_MODEL_NAME = 'User';
-
 export const userLoginDTO = Yup.object({
 	identifier: Yup.string().required(),
 	password: validatePassword,

@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateAssignmentDTO } from './types';
+import { AssignmentEntity } from './entity';
 
 class AssignmentRepository {
 	private db: PrismaClient;
@@ -8,7 +10,7 @@ class AssignmentRepository {
 		this.db = dbClient;
 	}
 
-	async create(data: any) {
+	async create(data: CreateAssignmentDTO) {
 		const created = await this.db.assignments.create({
 			data: {
 				assignment_id: uuidv4(),
@@ -101,16 +103,29 @@ class AssignmentRepository {
 	}
 }
 
-function toDto(data: any) {
-	return {
+function toDto(data: AssignmentEntity) {
+	const obj = {
 		assignmentId: data.assignment_id,
-		userId: data.student_id,
-		fullName: data.full_name,
 		subject: data.subject,
 		title: data.title,
 		content: data.content,
 		createdAt: data.created_at,
 		updatedAt: data.updated_at,
+	};
+
+	if (data.student?.full_name) {
+		return {
+			...obj,
+			student: {
+				studentId: data.student_id,
+				studentName: data.student.full_name,
+			},
+		};
+	}
+
+	return {
+		...obj,
+		studentId: data.student_id,
 	};
 }
 

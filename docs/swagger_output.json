@@ -196,6 +196,83 @@
           }
         ]
       }
+    },
+    "/v1/grades": {
+      "post": {
+        "tags": [
+          "Grade"
+        ],
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createGradeRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/createGradeRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/grades/{studentId}": {
+      "get": {
+        "tags": [
+          "Grade"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "default": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "default": 10,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -284,6 +361,26 @@
         },
         "xml": {
           "name": "createAssignmentRequest"
+        }
+      },
+      "createGradeRequest": {
+        "type": "object",
+        "properties": {
+          "grade": {
+            "type": "number",
+            "example": 100
+          },
+          "feedback": {
+            "type": "string",
+            "example": "feedback"
+          },
+          "assignmentId": {
+            "type": "string",
+            "example": "avx-qee-213"
+          }
+        },
+        "xml": {
+          "name": "createGradeRequest"
         }
       }
     }

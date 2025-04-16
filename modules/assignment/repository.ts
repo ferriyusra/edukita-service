@@ -105,7 +105,7 @@ class AssignmentRepository {
 
 function toDto(data: AssignmentEntity): AssignmentDTO {
 	const obj: AssignmentDTO = {
-		assignmentId: data.assignment_id,
+		id: data.assignment_id,
 		subject: data.subject,
 		title: data.title,
 		content: data.content,

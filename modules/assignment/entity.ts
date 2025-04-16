@@ -12,7 +12,7 @@ export interface AssignmentEntity {
 }
 
 export interface AssignmentDTO {
-	assignmentId: string;
+	id: string;
 	subject: string;
 	title: string;
 	content: string;

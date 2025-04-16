@@ -44,6 +44,11 @@ const doc = {
 				title: 'title',
 				content: 'content',
 			},
+			createGradeRequest: {
+				grade: 100,
+				feedback: 'feedback',
+				assignmentId: 'avx-qee-213',
+			},
 		},
 	},
 };

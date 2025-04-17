@@ -1,6 +1,6 @@
 ### Test CRM
 
-- Login
+- Login as teacher
   email : teacher@gmail.com
   pass : Test2025
 

@@ -12,7 +12,7 @@ const doc = {
 			description: 'Local server',
 		},
 		{
-			url: 'https://edukita-service.app/api',
+			url: 'https://edukita-service-test-be.vercel.app/api',
 			description: 'Development server',
 		},
 	],

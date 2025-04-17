@@ -1,3 +1,9 @@
+### Test CRM
+
+- Login
+  email : teacher@gmail.com
+  pass : Test2025
+
 ### API Docs
 
 - API Docs : https://edukita-service-test-be.vercel.app/api-docs/

@@ -1,3 +1,7 @@
+### API Docs
+
+- API Docs : https://edukita-service-test-be.vercel.app/api-docs/
+
 ### Branch Rule
 
 - feature/{}

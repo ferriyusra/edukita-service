@@ -51,6 +51,3 @@ USER node
 HEALTHCHECK NONE
 
 CMD ["node", "dist/bin/www.js"]
-
-
-

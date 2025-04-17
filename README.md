@@ -47,3 +47,12 @@ ex:
 
 - https://www.npmjs.com/package/yup
 - https://www.prisma.io/docs/orm/overview/introduction
+
+# Deploy Dockerfile
+
+- using node alpine as build
+- using multi stage step to resize image container
+- docker build -t edukita-service .
+- docker run -p 8080:8080 edukita-service
+
+docker run -p 9852:9852 edukita-service

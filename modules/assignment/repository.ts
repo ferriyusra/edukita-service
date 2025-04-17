@@ -90,17 +90,109 @@ class AssignmentRepository {
 		};
 	}
 
-	async findOne(assignmentId: string) {
-		return this.db.assignments.findFirst({
+	async findOne(id: string) {
+		const data = await this.db.assignments.findFirst({
 			where: {
-				assignment_id: assignmentId,
+				assignment_id: id,
 			},
 			select: {
 				assignment_id: true,
 				student_id: true,
+				subject: true,
+				title: true,
+				content: true,
+				created_at: true,
+				updated_at: true,
+				student: {
+					select: {
+						full_name: true,
+					},
+				},
 			},
 		});
+
+		return data ? toDto(data) : null;
 	}
+
+	async findAssignmentForStudent(paging: any, studentId: string) {
+		const skip = (paging.page - 1) * paging.limit;
+		const filters: any[] = [];
+
+		filters.push({
+			student_id: {
+				equals: studentId,
+			},
+		});
+
+		if (paging.search) {
+			Object.keys(paging.search).forEach((key) => {
+				const value = paging.search[key];
+				if (typeof value !== 'object') {
+					filters.push({ [key]: { equals: value, mode: 'insensitive' } });
+				} else if (value.like) {
+					filters.push({
+						[key]: { contains: value.like, mode: 'insensitive' },
+					});
+				}
+			});
+		}
+
+		let orderBy = {};
+		if (paging.sort) {
+			const [sortField, sortOrder] = paging.sort.split(' ');
+			orderBy = { [sortField]: sortOrder === 'desc' ? 'desc' : 'asc' };
+		}
+
+		const whereClause = filters.length > 0 ? { AND: filters } : undefined;
+
+		const assignments = await this.db.assignments.findMany({
+			take: paging.limit,
+			skip: skip,
+			where: whereClause,
+			orderBy,
+			include: {
+				student: {
+					select: {
+						full_name: true,
+					},
+				},
+				grade: {
+					select: {
+						grade: true,
+						feedback: true,
+						teacher: {
+							select: {
+								full_name: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		const totalItems = await this.db.assignments.count({
+			where: whereClause,
+		});
+
+		return {
+			rows: assignments.map((assignment) => toDtoStudentData(assignment)),
+			count: totalItems,
+		};
+	}
+}
+function toDtoStudentData(data: any) {
+	return {
+		id: data.assignment_id,
+		title: data.title,
+		subject: data.subject,
+		content: data.content,
+		studentName: data.student?.full_name,
+		grade: data.grade?.grade ?? null,
+		feedback: data.grade?.feedback ?? null,
+		teacherName: data.grade?.teacher?.full_name ?? null,
+		createdAt: data.created_at,
+		updatedAt: data.updated_at,
+	};
 }
 
 function toDto(data: AssignmentEntity): AssignmentDTO {

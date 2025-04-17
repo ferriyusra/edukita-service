@@ -34,11 +34,6 @@ const doc = {
 				password: 'yourpassword',
 				confirmPassword: 'yourConfirmpassword',
 			},
-			createUserRequest: {
-				fullName: 'yourname',
-				email: 'youremail@mail.com',
-				role: 'roleuser',
-			},
 			createAssignmentRequest: {
 				subject: 'ENGLISH',
 				title: 'title',

@@ -60,7 +60,7 @@ model assignments {
 
 model grades {
   id       Int    @id @default(autoincrement())
-  grade    Int    @db.Integer
+  grade    Int
   feedback String @db.Text
 
   created_at DateTime @default(now()) @db.Timestamp()

@@ -90,39 +90,6 @@
         ]
       }
     },
-    "/v1/users": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": {}
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/createUserRequest"
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "$ref": "#/components/schemas/createUserRequest"
-              }
-            }
-          }
-        }
-      }
-    },
     "/v1/assignments": {
       "post": {
         "tags": [
@@ -180,6 +147,70 @@
           {
             "name": "subject",
             "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ]
+      }
+    },
+    "/v1/assignments/students": {
+      "get": {
+        "tags": [
+          "Assignment"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "default": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "default": 10,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": {}
+          }
+        ]
+      }
+    },
+    "/v1/assignments/{id}": {
+      "get": {
+        "tags": [
+          "Assignment"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -321,26 +352,6 @@
         },
         "xml": {
           "name": "RegisterRequest"
-        }
-      },
-      "createUserRequest": {
-        "type": "object",
-        "properties": {
-          "fullName": {
-            "type": "string",
-            "example": "yourname"
-          },
-          "email": {
-            "type": "string",
-            "example": "youremail@mail.com"
-          },
-          "role": {
-            "type": "string",
-            "example": "roleuser"
-          }
-        },
-        "xml": {
-          "name": "createUserRequest"
         }
       },
       "createAssignmentRequest": {

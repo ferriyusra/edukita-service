@@ -12,8 +12,16 @@ class AssignmentService {
 		return data;
 	}
 
-	async findOne(assignmentId: string) {
-		return this.assignmentRepository.findOne(assignmentId);
+	async findAssignmentForStudent(paging: any, studentId: string) {
+		const data = await this.assignmentRepository.findAssignmentForStudent(
+			paging,
+			studentId
+		);
+		return data;
+	}
+
+	async findOne(id: string) {
+		return this.assignmentRepository.findOne(id);
 	}
 }
 

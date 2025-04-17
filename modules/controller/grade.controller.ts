@@ -6,7 +6,6 @@ import { getPaging } from '../../util/paging';
 import { getGradeSearchable } from '../grade/searchable';
 import AssignmentService from '../assignment/service';
 import { gradeRequest } from '../grade/validation';
-import { ROLES } from '../../util/constant';
 
 class GradeController {
 	constructor(
@@ -28,7 +27,7 @@ class GradeController {
 			if (!assignment) {
 				return response.notfound(res, 'Assignment Not Found');
 			}
-			const studentId = assignment.student_id;
+			const studentId = assignment.student?.studentId;
 
 			const haveGrade = await this.gradeService.getGradeByAssignmentId(
 				assignmentId
@@ -50,6 +49,7 @@ class GradeController {
 
 			return response.success(res, result, 'Grade submit successfully');
 		} catch (error) {
+			console.log(error);
 			return response.error(res, error, 'Grade submit failed');
 		}
 	}

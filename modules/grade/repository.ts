@@ -11,12 +11,13 @@ class GradeRepository {
 	}
 
 	async create(data: CreateGradeDTO) {
+		console.log(data);
 		const created = await this.db.grades.create({
 			data: {
 				assignment_id: data.assignmentId,
 				teacher_id: data.teacherId,
 				student_id: data.studentId,
-				grade: data.grade,
+				grade: Number(data.grade),
 				feedback: data.feedback,
 				updated_at: new Date(),
 			},

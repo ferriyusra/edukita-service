@@ -62,6 +62,48 @@ class AssignmentController {
 			return response.error(res, error, 'Failed find all assignments');
 		}
 	}
+
+	async findAssignmentForStudent(req: IReqUser, res: Response) {
+		try {
+			const { query } = req;
+			console.log('res', query);
+			const studentId = req.user?.user_id;
+
+			// get paging
+			const paging = getPaging(query, getAssignmentSearchable());
+
+			const data = await this.assignmentService.findAssignmentForStudent(
+				paging,
+				`${studentId}`
+			);
+
+			return response.pagination(
+				res,
+				data.rows,
+				Number(data.count),
+				paging,
+				'Success find all assignments students'
+			);
+		} catch (error) {
+			return response.error(res, error, 'Failed find all assignments students');
+		}
+	}
+
+	async findOne(req: IReqUser, res: Response) {
+		try {
+			const { id } = req.params;
+
+			const result = await this.assignmentService.findOne(id);
+
+			if (!result) {
+				return response.notfound(res, 'Assignment not found');
+			}
+
+			return response.success(res, result, 'Success find one assignment');
+		} catch (error) {
+			return response.error(res, error, 'Failed find one assignment');
+		}
+	}
 }
 
 export default AssignmentController;

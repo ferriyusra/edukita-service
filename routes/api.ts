@@ -72,22 +72,22 @@ export class ApiRouter {
 		);
 
 		// User Route
-		this.router.post(
-			'/v1/users',
-			[authMiddleware, aclMiddleware([ROLES.ADMIN])],
-			(req: IReqUser, res: Response, _next: NextFunction) =>
-				this.userController.create(req, res)
-			/*
-			#swagger.tags = ['User']
-			#swagger.security = [{
-      	"bearerAuth": {}
-      }]
-			#swagger.requestBody = {
-				required: true,
-				schema: {$ref: '#/components/schemas/createUserRequest'}
-			}
-			*/
-		);
+		// this.router.post(
+		// 	'/v1/users',
+		// 	[authMiddleware, aclMiddleware([ROLES.ADMIN])],
+		// 	(req: IReqUser, res: Response, _next: NextFunction) =>
+		// 		this.userController.create(req, res)
+		// 	/*
+		// 	#swagger.tags = ['User']
+		// 	#swagger.security = [{
+		//   	"bearerAuth": {}
+		//   }]
+		// 	#swagger.requestBody = {
+		// 		required: true,
+		// 		schema: {$ref: '#/components/schemas/createUserRequest'}
+		// 	}
+		// 	*/
+		// );
 
 		// Assignment Route
 		this.router.post(
@@ -127,6 +127,40 @@ export class ApiRouter {
 				in: 'query',
 				type: 'string'
 			}
+			#swagger.security = [{
+      	"bearerAuth": {}
+      }]
+			*/
+		);
+		this.router.get(
+			'/v1/assignments/students',
+			[authMiddleware, aclMiddleware([ROLES.STUDENT])],
+			(req: IReqUser, res: Response, _next: NextFunction) =>
+				this.assignmentController.findAssignmentForStudent(req, res)
+			/*
+			#swagger.tags = ['Assignment']
+			#swagger.parameters['page'] = {
+				in: 'query',
+				type: 'number',
+				default: 1
+			}
+			#swagger.parameters['perPage'] = {
+				in: 'query',
+				type: 'number',
+				default: 10
+			}
+			#swagger.security = [{
+      	"bearerAuth": {}
+      }]
+			*/
+		);
+		this.router.get(
+			'/v1/assignments/:id',
+			[authMiddleware, aclMiddleware([ROLES.TEACHER])],
+			(req: IReqUser, res: Response, _next: NextFunction) =>
+				this.assignmentController.findOne(req, res)
+			/*
+			#swagger.tags = ['Assignment']
 			#swagger.security = [{
       	"bearerAuth": {}
       }]

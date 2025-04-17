@@ -66,7 +66,6 @@ class AssignmentController {
 	async findAssignmentForStudent(req: IReqUser, res: Response) {
 		try {
 			const { query } = req;
-			console.log('res', query);
 			const studentId = req.user?.user_id;
 
 			// get paging

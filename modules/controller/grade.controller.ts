@@ -49,7 +49,6 @@ class GradeController {
 
 			return response.success(res, result, 'Grade submit successfully');
 		} catch (error) {
-			console.log(error);
 			return response.error(res, error, 'Grade submit failed');
 		}
 	}
